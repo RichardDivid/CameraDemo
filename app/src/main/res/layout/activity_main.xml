@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="使用SurfaceView拍照预览"/>
+     <Button
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="使用textureView拍照预览"/>
+
+  <Button
+        android:id="@+id/glsurfaceview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="使用GLSurfaceView画图"/>
+
+
+</LinearLayout>
