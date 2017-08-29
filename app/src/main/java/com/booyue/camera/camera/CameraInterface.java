@@ -35,6 +35,8 @@ public class CameraInterface {
 
     }
 
+    private CamOpenOverCallback mCallback;
+
     public static synchronized CameraInterface getInstance() {
         if (mCameraInterface == null) {
             mCameraInterface = new CameraInterface();
@@ -47,7 +49,11 @@ public class CameraInterface {
      *
      * @param callback
      */
+
     public void doOpenCamera(CamOpenOverCallback callback) {
+//        if (mCallback == null && callback != null) {
+//            mCallback = callback;
+//        }
         LogUtil.d(TAG + "Camera open....");
         mCamera = Camera.open();
         LogUtil.d(TAG + "Camera open over....");
@@ -81,6 +87,7 @@ public class CameraInterface {
 
     /**
      * 使用TextureView预览Camera
+     *
      * @param surface
      * @param previewRate
      */
@@ -103,6 +110,7 @@ public class CameraInterface {
 
     /**
      * 初始化照相机
+     *
      * @param previewRate
      */
     private void initCamera(float previewRate) {
@@ -169,6 +177,7 @@ public class CameraInterface {
         public void onShutter() {
             // TODO Auto-generated method stub
             LogUtil.d(TAG + "myShutterCallback:onShutter...");
+
         }
     };
     /**
@@ -208,4 +217,54 @@ public class CameraInterface {
             isPreviewing = true;
         }
     };
+
+    private int cameraPosition = 1;//0代表前置摄像头，1代表后置摄像头
+
+    public void switchCameraFace(SurfaceHolder holder, float previewRate) {
+        //切换前后摄像头
+        int cameraCount = 0;
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        cameraCount = Camera.getNumberOfCameras();//得到摄像头的个数
+        for (int i = 0; i < cameraCount; i++) {
+            Camera.getCameraInfo(i, cameraInfo);//得到每一个摄像头的信息
+            if (cameraPosition == 1) {
+                //现在是后置，变更为前置
+                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {//代表摄像头的方位，CAMERA_FACING_FRONT前置      CAMERA_FACING_BACK后置
+                    mCamera.stopPreview();//停掉原来摄像头的预览
+                    mCamera.release();//释放资源
+                    mCamera = null;//取消原来摄像头
+                    mCamera = Camera.open(i);//打开当前选中的摄像头
+                    try {
+                        mCamera.setPreviewDisplay(holder);//通过surfaceview显示取景画面
+                        initCamera(1.7778f);
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+//                    mCamera.startPreview();//开始预览
+                    cameraPosition = 0;
+                    break;
+                }
+            } else {
+                //现在是前置， 变更为后置
+                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {//代表摄像头的方位，CAMERA_FACING_FRONT前置      CAMERA_FACING_BACK后置
+                    mCamera.stopPreview();//停掉原来摄像头的预览
+                    mCamera.release();//释放资源
+                    mCamera = null;//取消原来摄像头
+                    mCamera = Camera.open(i);//打开当前选中的摄像头
+                    try {
+                        mCamera.setPreviewDisplay(holder);//通过surfaceview显示取景画面
+                        initCamera(1.7778f);
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+//                    mCamera.startPreview();//开始预览
+                    cameraPosition = 1;
+                    break;
+                }
+            }
+
+        }
+    }
 }

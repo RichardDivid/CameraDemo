@@ -1,6 +1,7 @@
 package com.booyue.camera.camera;
 
 import android.content.Context;
+import android.graphics.Camera;
 import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
 import android.view.TextureView;
@@ -12,7 +13,7 @@ import com.booyue.camera.util.LogUtil;
  */
 
 public class CameraTextureView extends TextureView implements TextureView.SurfaceTextureListener{
-    private static final String TAG = "yanzi";
+    private static final String TAG = CameraTextureView.class.getSimpleName();
     Context mContext;
     SurfaceTexture mSurface;
     public CameraTextureView(Context context, AttributeSet attrs) {
